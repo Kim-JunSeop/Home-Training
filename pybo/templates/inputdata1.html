@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='get.css')}}">
+   <title>운동의 민족</title>
+         <link rel="icon" href="{{url_for('static', filename='favicon (2).ico')}}">
+</head>
+<body>
+    <div class="box">
+        <h2>신체 정보</h2>
+        <form method="post">
+            <div>
+                <input type="text" name="height" id="height" required="" autocomplete="off">
+                <label>키</label>
+            </div>
+            <div>
+                <input type="text" name="weight" id="weight" required="" autocomplete="off">
+                <label>몸무게</label>
+            </div>
+            <div>
+                <input type="text" name="body_fat" id="body_fat" required="" autocomplete="off">
+                <label>체지방</label>
+            </div>
+            <div>
+                <input type="text" name="body_muscle" id="body_muscle" required="" autocomplete="off">
+                <label>골격근량</label>
+            </div>
+            <input type="submit"  value="입력하기">
+        </form>
+    </div>
+    
+</body>
+</html>

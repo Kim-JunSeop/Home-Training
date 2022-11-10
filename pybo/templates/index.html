@@ -1,0 +1,327 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="{{url_for('static', filename='index.css')}}">
+        <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
+
+        <!-- 그래프 js-->
+        <link rel="stylesheet" href="https://naver.github.io/billboard.js/release/latest/dist/theme/datalab.min.css">
+        <script src="https://naver.github.io/billboard.js/release/latest/dist/billboard.pkgd.min.js"></script>
+        <!-- 그래프 js-->
+         <title>운동의 민족</title>
+     <link rel="icon" href="{{url_for('static', filename='favicon (2).ico')}}">
+
+    </head>
+    <body>
+        <div class="wrap">
+            <!-- Header start-->
+            <div class="header">
+        <h1><a href="/">운동의 민족</a></h1>
+        <div class="nav">
+             {% if g.user %}
+				<ul class="navbar-nav">
+					<li><a href="/training/">Training</a></li>
+					<li><a href="/question/list">Community</a></li>
+					<li><a href="/input">MyPage</a></li>
+					<li class="nav-item ">
+					<a class="nav-link" href="{{ url_for('main.logout') }}">{{ g.user.user_name }} Loginout</a>
+					</li>
+				</ul>
+			{% else %}
+				<ul>
+					<li><a href="/training/">Training</a></li>
+					<li><a href="/question/list">Community</a></li>
+					<li><a href="/input">MyPage</a></li>
+					<li><a href="/login">Login</a></li>
+					<li><a href=/signup>SignUp</a></li>
+				</ul>
+            {% endif %}
+        </div>
+    </div>
+            <!-- Header end-->
+
+            <!-- Section start-->
+            <div id="section">
+                <div class="blank"></div>
+
+                <!-- Fisrt section-->
+                <div class="firstsection">
+                    <div class="myprofilearea">
+                        <div class="myprofile">
+                            {% if g.user%}
+                            <p>마이 프로필</p>
+                            <h1 class="username">{{ g.user.user_name}} </h1>
+                            <h4 class="email">{{ g.user.email}}</h4>
+
+                                {% if profile_last_exercise %}
+                                <p class="lastexercise">{{ profile_last_exercise[0].create_date|datetime }}<br>마지막으로 운동한 날</p>
+                                {% else %}
+                                <p class="lastexercise">---<br>마지막으로 운동한 날</p>
+                                {% endif %}
+                            <p class="address">{{ g.user.address }}<br>주소</p>
+                            <p class="phonenumber"> {{ g.user.phone}}<br>핸드폰 번호</p>
+                            <input type="button" value="프로필 수정하기" class="button" onClick="location.href='/input/profilechange'">
+                            {% else %}
+                            <h2>마이 프로필</h2>
+                            <p class="pleaselogin">로그인을 해주세요</p>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <div class="testarea">
+                        <div class="dataprofilearea">
+                            <h3>{{g.user.user_name}} 신체 데이터</h3>
+                                <ul class="listarea">
+                                    <li class="weightlist">
+                                        <p class="weight">{{ recent_month1.weight }}kg</p>
+                                        <p class="weighttext">몸무게</p>
+                                    </li>
+                                    <li>
+                                        <div class="grapharea">
+                                            <div id="gaugeChart_recent"></div>
+                                            </div>
+                                            <script>
+                                                var chart = bb.generate({
+                                                data: {
+                                                    columns: [['BMI', {{ recent_month1.weight/(recent_month1.height*recent_month1.height/10000) }}]],
+                                                    type: 'gauge',
+                                                },
+                                                gauge: {},
+                                                color: {
+                                                    pattern: ['#84BAE9', '#60B044', '#F6C600', '#F97600', '#FF0000',],
+                                                    threshold: {
+                                                    values: [18.5, 23, 25, 30],
+                                                    },
+                                                },
+                                                size: {
+
+                                                    height: 150,
+                                                },
+                                                bindto: '#gaugeChart_recent',
+                                                });
+                                                </script>
+                                    </li>
+                                    <li>
+                                        <div class="grapharea">
+                                        <div id="gaugeChart_recent2"></div>
+                                        </div>
+                                        <script>
+                                            var chart = bb.generate({
+                                            data: {
+                                                columns: [['체지방', {{ recent_month1.body_fat }}]],
+                                                type: 'gauge',
+                                            },
+                                            gauge: {},
+                                            color: {
+                                                pattern: ['#60B044', '#60B044', '#60B044', '#F6C600', '#F97600','#FF0000'],
+                                                threshold: {
+                                                values: [6, 13, 17, 24, 30],
+                                                },
+                                            },
+                                            size: {
+
+                                                height: 150,
+                                            },
+                                            bindto: '#gaugeChart_recent2',
+                                            });
+                                            </script>
+                                    </li>
+                                    <li>
+                                        <div class="grapharea">
+                                            <div id="simpleXYLineChart_recent2"></div>
+                                        </div>
+                                        <script>
+                                            var chart = bb.generate({
+                                            data: {
+                                                columns: [['골격근', {{ recent_month1.body_muscle }}]],
+                                                type: 'gauge',
+                                            },
+                                            gauge: {},
+                                            color: {
+                                                pattern: ['#2ac1bc'],
+                                                threshold: {
+                                                values: [],
+                                                },
+                                            },
+                                            size: {
+
+                                                height: 150,
+                                            },
+                                            bindto: '#simpleXYLineChart_recent2',
+                                            });
+                                        </script>
+                                    </li>
+                                </ul>
+                                <input type="button" value="입력하기" class="inputbutton button" onclick="inputdata1();">
+                                <input type="button" value="자세히보기" class="inputbutton button"
+                                       onClick="location.href='/list/bodydata'">
+                        </div>
+
+                        <div class="dataprofile1area">
+                            <h3>{{g.user.user_name}} 최근 신체 변화량</h3>
+                            <ul class="listarea">
+                                    <li>
+                                        <div class="grapharea">
+                                            <div id="simpleXYLineChart_3valuerecent"></div>
+                                        </div>
+
+                                       <script>
+                                            var chart = bb.generate({
+                                            data: {
+                                                x: "x",
+                                                columns: [
+                                                ["x", 1, 2, 3],
+                                                ["몸무게 변화", {{ recent_month3.weight }}, {{ recent_month2.weight }}, {{ recent_month1.weight }}],
+                                                ],
+                                                type: "line"
+                                            },
+                                            size:{
+                                                height: 180
+                                            },
+                                            bindto: "#simpleXYLineChart_3valuerecent"
+                                            });
+
+                                        </script>
+
+                                    </li>
+                                    <li>
+                                        <div class="grapharea">
+                                            <div id="gaugeChart_3valuerecent"></div>
+                                            </div>
+                                            <script>
+                                                var chart = bb.generate({
+                                                data: {
+                                                    x: "x",
+                                                    columns: [
+                                                    ["x", 1, 2, 3],
+                                                    ["BMI 변화", {{ recent_month3.weight/(recent_month3.height*recent_month3.height/10000) }}, {{ recent_month2.weight/(recent_month2.height*recent_month2.height/10000) }}, {{ recent_month1.weight/(recent_month1.height*recent_month1.height/10000) }}],
+                                                    ],
+                                                    type: "line"
+                                                },
+                                                size:{
+                                                    height: 180
+                                                },
+                                                bindto: "#gaugeChart_3valuerecent"
+                                                });
+
+                                                </script>
+                                    </li>
+                                    <li>
+                                        <div class="grapharea">
+                                        <div id="gaugeChart_3valuerecent2"></div>
+                                        </div>
+                                        <script>
+                                            var chart = bb.generate({
+                                            data: {
+                                                x: "x",
+                                                columns: [
+                                                ["x", 1, 2, 3],
+                                                ["체지방 변화", {{ recent_month3.body_fat }}, {{ recent_month2.body_fat }}, {{ recent_month1.body_fat }}],
+                                                ],
+                                                type: "line"
+                                            },
+                                            size:{
+                                                height: 180
+                                            },
+                                            bindto: "#gaugeChart_3valuerecent2"
+                                            });
+                                            </script>
+                                    </li>
+                                    <li>
+                                        <div class="grapharea">
+                                            <div id="simpleXYLineChart_3valuerecent2"></div>
+                                        </div>
+                                        <script>
+                                            var chart = bb.generate({
+                                            data: {
+                                                x: "x",
+                                                columns: [
+                                                ["x", 1, 2, 3],
+                                                ["골격근 변화", {{ recent_month3.body_muscle }}, {{ recent_month2.body_muscle }}, {{ recent_month1.body_muscle }}],
+                                                ],
+                                                type: "line"
+                                            },
+                                            size:{
+                                                height: 180
+                                            },
+                                            bindto: "#simpleXYLineChart_3valuerecent2"
+                                            });
+                                        </script>
+                                    </li>
+                                </ul>
+                        </div>
+
+                        <div class="dataprofile2area">
+                            <div class="montharea">
+                                <!--
+                                {% if exercise_list %}
+                                    var arr = []
+                                    for(var i=0; i<{{ exercise_list|length}}; i++){
+                                        arr[i] = {{ exercise_list[i] }};
+                                    }
+
+                                {% else %}
+
+                                {% endif %}
+                                -->
+                                <!--
+                                <script>
+                                    {% if exercise_list %}
+                                    alert("test");
+                                    var arr = []
+                                    for(var i=0; i<{{ exercise_list|length }}; i++){
+                                        arr[i] = {{ exercise_list[0].exercise_time }};
+                                        alert(arr[i]);
+
+                                    }
+                                    {% endif %}
+                                </script>
+                                -->
+
+                                <div class="grapharea">
+                                    <div id="barChart1"></div>
+                                </div>
+                                <script>
+
+                                    var chart = bb.generate({
+                                    data: {
+                                        x: "x",
+                                        columns: [
+                                        ["x", 30, 29, 28, 27, 26, 25, 24, 23, 22, 21,20 ,19, 18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1],
+                                        ["운동시간(분)", {{ test[0].exercise_time }} ,{{ test[1].exercise_time }} , {{ test[2].exercise_time }},
+                                          {{ test[3].exercise_time }}, {{ test[4].exercise_time }}, {{ test[5].exercise_time }}, {{ test[6].exercise_time }}, {{ test[7].exercise_time }},
+                                           {{ test[8].exercise_time }}, {{ test[9].exercise_time }}, {{ test[10].exercise_time }}, {{ test[11].exercise_time }}, {{ test[12].exercise_time }},
+                                            {{ test[13].exercise_time }}, {{ test[14].exercise_time }}, {{ test[15].exercise_time }}, {{ test[16].exercise_time }}, {{ test[17].exercise_time }},
+                                             {{ test[18].exercise_time }}, {{ test[19].exercise_time }}, {{ test[20].exercise_time }}, {{ test[21].exercise_time }},
+                                             {{ test[22].exercise_time }},{{ test[23].exercise_time }},{{ test[24].exercise_time }},{{ test[25].exercise_time }},
+                                             {{ test[26].exercise_time }},{{ test[27].exercise_time }},{{ test[28].exercise_time }},{{ test[29].exercise_time }},],
+                                        ],
+                                        type: "bar"
+                                    },
+                                    size:{
+                                        height: 250
+                                    },
+                                    bindto: "#barChart1"
+                                    });
+                                </script>
+                            </div>
+                            <input type="button" value="입력하기" class="inputbutton2 button" onclick="inputmonthdata1();">
+                            <input type="button" value="자세히보기" class="inputbutton2 button" onClick="location.href='/list/exercisedata'">
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Fisrt section end -->
+
+
+
+            </div>
+            <div class="blank"></div>
+
+        </div>
+    </body>
+    </html>

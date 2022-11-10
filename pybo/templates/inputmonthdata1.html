@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>운동의 민족</title>
+         <link rel="icon" href="{{url_for('static', filename='favicon (2).ico')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='get2.css')}}">
+
+</head>
+<body>
+    <div class="box">
+        <h2>데이터 입력</h2>
+        <form method="post">
+            <div>
+                <input type="text" name="exercise_type" id="exercise_type" required autocomplete="off">
+                <label>운동종류</label>
+            </div>
+            <div>
+                <input type="text" name="exercise_time" id="exercise_time" required="" autocomplete="off">
+                <label>운동시간(분)</label>
+            </div>
+            <div>
+                <textarea required="" name="exercise_note" id="exercise_note" autocomplete="off"></textarea>
+                <label>운동메모</label>
+            </div>
+            <input type="submit" name="" value="입력하기">
+        </form>
+    </div>
+</body>
+</html>
