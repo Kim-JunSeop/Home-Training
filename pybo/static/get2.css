@@ -83,9 +83,7 @@ body{
     transition: .5s;
     pointer-events: none;
 }
-::-webkit-scrollbar {
-  display: none;
-}
+
 .box input:focus ~ label,
 .box input:valid ~ label,
 .box textarea:focus ~ label,

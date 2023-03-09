@@ -260,9 +260,7 @@ body{
     height: 250px;
     margin-top: 20px;
 }
-::-webkit-scrollbar {
-  display: none;
-}
+
 .inputbutton2{
     width:100px;
     height: 30px;
